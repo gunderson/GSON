@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 function getIndentationString(lines) {
     if (lines[1].charAt(0) === "\t") {
         return "\t";
@@ -101,6 +103,36 @@ function getObjectType(line) {
     }
 }
 
+
+function stringifyObject(obj, indentationChar, indentationLevel) {
+    indentationLevel = indentationLevel || 0;
+    var str = "";
+    if (typeof obj === "object" && typeof obj.push !== "function") {
+        // object
+        for (var key in obj) {
+            var val = (typeof obj[key] == "object") ? stringifyObject(obj[key], indentationChar, indentationLevel + 1) : JSON.stringify(obj[key]);
+            str += "\n" + indent(indentationChar, indentationLevel) + key + " " + val;
+        }
+    } else if (typeof obj === "object" && typeof obj.push === "function") {
+        // array
+        obj.forEach(function(element) {
+            if (typeof element == "object") {
+                element = stringifyObject(element);
+            }
+            str += "\n" + indent(indentationChar, indentationLevel) + element;
+        });
+    }
+    return str;
+}
+
+function indent(indentationChar, indentationLevel) {
+    var str = "";
+    while (indentationLevel--) {
+        str += indentationChar
+    }
+    return str;
+}
+
 function isString(input) {
     return input.charAt(0) == "\"" || input.charAt(0) == "'";
 }
@@ -113,10 +145,11 @@ function isNumber(input) {
 
 module.exports = {
     toJSON: function(input) {
-
+        var lines = stringInput.trim().split("\n");
+        return parseGSONLines(JSON.stringify(lines));
     },
     stringify: function(objectInput) {
-
+        return stringifyObject(objectInput, "\t").substr(1);
     },
     parse: function(stringInput) {
         var lines = stringInput.trim().split("\n");
