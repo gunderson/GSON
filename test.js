@@ -16,8 +16,7 @@ var obj = {
 		"arr": [
 			0,
 			1,
-			2,
-			obj: {
+			2, {
 				test: "testval"
 			}
 		]

@@ -76,6 +76,16 @@ function parseLine(currentPath, lines, i) {
         case "number":
             parentObject.push(parseInt(line));
             break;
+        case "anonymous object":
+            var o = {};
+            parentObject.push(o);
+            parentObject = o;
+            break;
+        case "anonymous array":
+            var a = [];
+            parentObject.push(a);
+            parentObject = a;
+            break;
         case "object":
             if (i < lines.length - 1 && getObjectType(lines[i + 1]) !== "key:value") {
                 parentObject[line] = [];
@@ -90,34 +100,47 @@ function parseLine(currentPath, lines, i) {
 
 function getObjectType(line) {
     var words, key, value;
+    var specials = ["#", "|"];
     line = line.trim();
     words = line.split(" ");
     if (words.length > 1 && words[1].charAt(0)) {
         return "key:value";
-    } else if (isString(line)) {
+    } else if (isString(line) && specials.indexOf(line) === -1) {
         return "string";
     } else if (/[0-9]/g.test(line.charAt(0))) {
         return "number";
+    } else if (line == "#") {
+        return "anonymous object";
+    } else if (line == "|") {
+        return "anonymous array";
     } else {
         return "object";
     }
 }
 
 
-function stringifyObject(obj, indentationChar, indentationLevel) {
+function stringifyObject(obj, indentationChar, indentationLevel, anon) {
     indentationLevel = indentationLevel || 0;
     var str = "";
     if (typeof obj === "object" && typeof obj.push !== "function") {
         // object
+        if (anon) {
+            str += "#";
+            indentationLevel++;
+        }
         for (var key in obj) {
             var val = (typeof obj[key] == "object") ? stringifyObject(obj[key], indentationChar, indentationLevel + 1) : JSON.stringify(obj[key]);
             str += "\n" + indent(indentationChar, indentationLevel) + key + " " + val;
         }
     } else if (typeof obj === "object" && typeof obj.push === "function") {
         // array
+        if (anon) {
+            str += "|";
+            indentationLevel++;
+        }
         obj.forEach(function(element) {
             if (typeof element == "object") {
-                element = stringifyObject(element);
+                element = stringifyObject(element, indentationChar, indentationLevel, true);
             }
             str += "\n" + indent(indentationChar, indentationLevel) + element;
         });
@@ -128,7 +151,7 @@ function stringifyObject(obj, indentationChar, indentationLevel) {
 function indent(indentationChar, indentationLevel) {
     var str = "";
     while (indentationLevel--) {
-        str += indentationChar
+        str += indentationChar;
     }
     return str;
 }
