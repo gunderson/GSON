@@ -1,0 +1,12 @@
+obj
+    key0 "value0"
+    key1 "value1"
+    nested_obj
+        key "value"
+arr
+    0
+    1
+    2
+    3
+    obj
+        key "value"
