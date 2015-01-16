@@ -17,7 +17,9 @@ var obj = {
 			0,
 			1,
 			2,
-			3
+			obj: {
+				test: "testval"
+			}
 		]
 	}
 }

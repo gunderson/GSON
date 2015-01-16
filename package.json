@@ -1,25 +1,29 @@
 {
-  "name": "GSON",
-  "version": "0.0.0",
-  "description": "Minimal data format alternative to JSON.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:gunderson/GSON.git"
-  },
-  "keywords": [
-    "GSON",
-    "JSON",
-    "Data",
-    "format"
-  ],
-  "author": "Patrick Gunderson",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gunderson/GSON/issues"
-  },
-  "homepage": "https://github.com/gunderson/GSON"
+	"name": "GSON",
+	"version": "0.0.0",
+	"description": "Minimal data format alternative to JSON.",
+	"main": "index.js",
+	"scripts": {
+		"test": "node test.json"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:gunderson/GSON.git"
+	},
+	"keywords": [
+		"GSON",
+		"JSON",
+		"Data",
+		"format"
+	],
+	"author": "Patrick Gunderson",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/gunderson/GSON/issues"
+	},
+	"homepage": "https://github.com/gunderson/GSON",
+	"preferGlobal": "true",
+	"bin": {
+		"GSON": "index.js"
+	}
 }
